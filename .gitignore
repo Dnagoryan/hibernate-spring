@@ -1,0 +1,4 @@
+target/
+.idea
+/src/main/java/ru/gb/daoManufacturer/
+/src/main/java/ru/gb/entity/Manufacturer.java
