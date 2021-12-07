@@ -34,11 +34,5 @@ public class JpaClientDao implements ClientDao {
         return namedQuery.getSingleResult();
     }
 
-    @Override
-    public Client findOrderById(Long id) {
-        TypedQuery<Client> namedQuery = entityManager
-                .createNamedQuery("Client.findById", Client.class);
-        namedQuery.setParameter("id", id);
-        return namedQuery.getSingleResult();
-    }
+
 }

@@ -40,12 +40,12 @@ import java.util.Set;
         return orders.add(order);
         }
 
-//@Override
-//public String toString(){
-//        return"Client{"+
-//        "id="+id+
-//        ", clientName='"+clientName+'\''+
-//        ", orders="+orders+
-//        "}\n";
-//        }
+@Override
+public String toString(){
+        return"Client{"+
+        "id="+id+
+        ", clientName='"+clientName+'\''+
+        ", orders="+orders+
+        "}\n";
+        }
         }

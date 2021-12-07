@@ -10,5 +10,5 @@ public interface ClientDao {
 
     List<Client> findAll();
     Client findById(Long id);
-    Client findOrderById(Long id);
+
 }

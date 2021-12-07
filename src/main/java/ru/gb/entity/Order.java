@@ -31,14 +31,22 @@ public class Order {
     @JoinColumn(name = "client_id")
     private Client client;
 
+
+
+
+
+
+
     @ManyToMany(cascade = {CascadeType.PERSIST,
             CascadeType.MERGE, CascadeType.DETACH,
             CascadeType.REFRESH})
     @JoinTable(name ="ord_products",
             joinColumns = @JoinColumn(name = "ord_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> products;
+    private List<Product> productList;
 
+    @Column(name = "products")
+    private String products;
 
     @Column (name = "cost")
     private BigDecimal cost;
@@ -48,7 +56,7 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", client=" + client +
-                ", products=" + products +
+                ", products=" + productList +
                 ", cost=" + cost +
                 "}\n";
     }

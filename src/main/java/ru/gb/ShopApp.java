@@ -25,14 +25,16 @@ public class ShopApp {
         ClientDao clientDao=context.getBean(ClientDao.class);
         OrderDao   orderDao=context.getBean(OrderDao.class);
 
-        Order testOrder = Order.builder()
-                .products(new ArrayList<>(productDao.findAll().subList(1,5)))
-                .cost(orderDao.finalAmount(productDao.findAll().subList(1,5)))
-                .client(clientDao.findById(3L))
-                .build();
-        System.out.println(testOrder);
-        orderDao.save(testOrder);
 
+//        List<Product> productList= new ArrayList<>(productDao.findAll().subList(3,7));
+//        Order testOrder = Order.builder()
+//                .products(productList.toString())
+//                .cost(orderDao.finalAmount(productDao.findAll().subList(3,7)))
+//                .client(clientDao.findById(3L))
+//                .build();
+//        System.out.println(testOrder);
+//        orderDao.save(testOrder);
+        System.out.println(clientDao.findById(2L));
 
 //        ManufacturerDao manufacturerDao = context.getBean(ManufacturerDao.class);
 
