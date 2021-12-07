@@ -1,17 +1,19 @@
-package ru.gb.confighome;
+package ru.gb.config;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Driver;
@@ -21,7 +23,7 @@ import java.util.Properties;
 @PropertySource("classpath:jdbc.properties")
 @ComponentScan("ru.gb")
 @EnableTransactionManagement
-public class HibernateConfig {
+public class JpaConfig {
     @Value("${driverClassName}")
     private String driverClassName;
     @Value("${url}")
@@ -35,7 +37,9 @@ public class HibernateConfig {
     public DataSource dataSource() {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         try {
-            Class<? extends Driver> driver = (Class<? extends Driver>) Class.forName(driverClassName);
+            Class<? extends Driver> driver =
+                    (Class<? extends Driver>) Class
+                            .forName(driverClassName);
             dataSource.setDriverClass(driver);
             dataSource.setUrl(url);
             dataSource.setUsername("postgres");
@@ -45,21 +49,6 @@ public class HibernateConfig {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Bean
-    public SessionFactory sessionFactory() throws IOException {
-        LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
-        sessionFactoryBean.setDataSource(dataSource());
-        sessionFactoryBean.setPackagesToScan("ru.gb");
-        sessionFactoryBean.setHibernateProperties(hibernateProperties());
-        sessionFactoryBean.afterPropertiesSet();
-        return sessionFactoryBean.getObject();
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager() throws IOException {
-        return new HibernateTransactionManager(sessionFactory());
     }
 
     private Properties hibernateProperties() {
@@ -72,5 +61,29 @@ public class HibernateConfig {
         hibernateProperties.put("hibernate.jdbc.batch_size", 10);
         hibernateProperties.put("hibernate.fetch_size", 50);
         return hibernateProperties;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() throws IOException {
+        return  new JpaTransactionManager();
+    }
+
+    @Bean
+    public EntityManagerFactory entityManagerFactory(){
+        LocalContainerEntityManagerFactoryBean factoryBean =
+                new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setPackagesToScan("ru.gb.entity");
+        factoryBean.setDataSource(dataSource());
+        factoryBean.setJpaVendorAdapter(jpaVendorAdapter());
+        factoryBean.setJpaProperties(hibernateProperties());
+        factoryBean.afterPropertiesSet();
+        return factoryBean.getNativeEntityManagerFactory();
+
+    }
+
+
+    @Bean
+    public JpaVendorAdapter jpaVendorAdapter(){
+        return  new HibernateJpaVendorAdapter();
     }
 }

@@ -5,13 +5,14 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 @Entity
 @Table(name = "product")
 @NamedQueries({
@@ -33,5 +34,42 @@ public class Product {
     @Column(name = "product_date")
     private Date productDate;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.REFRESH})
+    @JoinTable(name ="cart_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "cart_id"))
+    private Set<Cart> carts;
 
+    @ManyToOne()
+    @JoinColumn(name = "manufacturer_id")
+    private Manufacturer manufacturer;
+
+    @ManyToMany(cascade ={CascadeType.PERSIST,
+            CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.REFRESH})
+    @JoinTable(name = "ord_products",
+    joinColumns = @JoinColumn(name = "product_id"),
+    inverseJoinColumns = @JoinColumn(name = "ord_id"))
+    private Set<Order> orders;
+
+    public boolean addOrder(Order order) {
+        if (order == null) {
+            orders = new HashSet<>();
+        }
+        return orders.add(order);
+    }
+
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", cost=" + cost +
+                ", productDate=" + productDate +
+                ", manufacturer=" + manufacturer.getName() +
+                "}\n";
+    }
 }
