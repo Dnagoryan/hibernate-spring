@@ -46,20 +46,7 @@ public class Product {
     @JoinColumn(name = "manufacturer_id")
     private Manufacturer manufacturer;
 
-    @ManyToMany(cascade ={CascadeType.PERSIST,
-            CascadeType.MERGE, CascadeType.DETACH,
-            CascadeType.REFRESH})
-    @JoinTable(name = "ord_products",
-    joinColumns = @JoinColumn(name = "product_id"),
-    inverseJoinColumns = @JoinColumn(name = "ord_id"))
-    private Set<Order> orders;
 
-    public boolean addOrder(Order order) {
-        if (order == null) {
-            orders = new HashSet<>();
-        }
-        return orders.add(order);
-    }
 
 
     @Override

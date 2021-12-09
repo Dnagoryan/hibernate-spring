@@ -1,12 +1,13 @@
 package ru.gb.dao;
 
+import org.springframework.data.repository.CrudRepository;
 import ru.gb.entity.Manufacturer;
 
-public interface ManufacturerDao {
-    Iterable<Manufacturer> findAll();
-    Manufacturer findById(Long id);
-    String findNameById(Long id);
-    Manufacturer save(Manufacturer manufacturer);
+import java.util.List;
 
-    void deleteById(Long id);
-}
+public interface ManufacturerDao extends CrudRepository<Manufacturer,Long> {
+    List<Manufacturer> findAll();
+    Manufacturer findById();
+    }
+
+
